@@ -29,6 +29,16 @@
 {
 	
 }
+.link-effect {
+	color: black;
+	text-decoration: none;
+	transition: all 0.3s ease;
+  }
+  
+  .link-effect:hover {
+	color: #007BFF; /* Màu xanh khi hover */
+	transform: scale(1.05); /* Phóng to nhẹ */
+  }
 
 /************
 2. 1440px

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Xếp Hạng Học Sinh</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Bảng Xếp Hạng Học Sinh Cô Ngọc</h1>
+            <p>Kết quả học tập học kỳ I - Năm học 2024-2025</p>
+        </div>
+
+        <div class="ranking-table">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Tổng số học sinh</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8.5</div>
+                    <div class="stat-label">Điểm trung bình</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Học sinh giỏi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">92%</div>
+                    <div class="stat-label">Tỷ lệ đậu</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="sortByScore()">Sắp xếp theo điểm</button>
+                <button class="btn btn-secondary" onclick="sortByName()">Sắp xếp theo tên</button>
+                <button class="btn btn-secondary" onclick="filterExcellent()">Chỉ hiển thị học sinh giỏi</button>
+                <button class="btn btn-secondary" onclick="showAll()">Hiển thị tất cả</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="🔍 Tìm kiếm học sinh..." onkeyup="searchStudent()">
+            </div>
+
+            <div class="table-container">
+                <table id="rankingTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Học sinh</th>
+                            <th>Lớp</th>
+                            <th>Điểm TB</th>
+                            <th>Xếp loại</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            { name: "Nguyễn Văn An", class: "12A1", score: 9.5, rank: 1 },
+            { name: "Trần Thị Bình", class: "12A2", score: 9.3, rank: 2 },
+            { name: "Lê Minh Cường", class: "12A1", score: 9.2, rank: 3 },
+            { name: "Phạm Thị Dung", class: "12A3", score: 9.0, rank: 4 },
+            { name: "Hoàng Văn Em", class: "12A2", score: 8.9, rank: 5 },
+            { name: "Ngô Thị Phương", class: "12A1", score: 8.8, rank: 6 },
+            { name: "Vũ Minh Giang", class: "12A3", score: 8.7, rank: 7 },
+            { name: "Đỗ Thị Hằng", class: "12A2", score: 8.6, rank: 8 },
+            { name: "Bùi Văn Inh", class: "12A1", score: 8.5, rank: 9 },
+            { name: "Lý Thị Khanh", class: "12A3", score: 8.4, rank: 10 },
+            { name: "Phan Văn Long", class: "12A2", score: 8.3, rank: 11 },
+            { name: "Đinh Thị Mai", class: "12A1", score: 8.2, rank: 12 },
+            { name: "Chu Văn Nam", class: "12A3", score: 8.1, rank: 13 },
+            { name: "Lương Thị Oanh", class: "12A2", score: 8.0, rank: 14 },
+            { name: "Trịnh Văn Phúc", class: "12A1", score: 7.9, rank: 15 },
+            { name: "Võ Thị Quỳnh", class: "12A3", score: 7.8, rank: 16 },
+            { name: "Đặng Văn Rồng", class: "12A2", score: 7.7, rank: 17 },
+            { name: "Hồ Thị Sương", class: "12A1", score: 7.6, rank: 18 },
+            { name: "Tạ Văn Thành", class: "12A3", score: 7.5, rank: 19 },
+            { name: "Nông Thị Uyên", class: "12A2", score: 7.4, rank: 20 },
+            { name: "Cao Văn Vinh", class: "12A1", score: 7.3, rank: 21 },
+            { name: "Mai Thị Xuân", class: "12A3", score: 7.2, rank: 22 },
+            { name: "Tô Văn Yến", class: "12A2", score: 7.1, rank: 23 },
+            { name: "Ông Thị Zênh", class: "12A1", score: 7.0, rank: 24 },
+            { name: "Dương Văn Anh", class: "12A3", score: 6.9, rank: 25 },
+            { name: "Dương Văn Anh", class: "12A3", score: 5, rank: 26 }
+        ];
+
+        let currentData = [...students];
+
+        function getClassification(score) {
+            if (score >= 9.0) return "Xuất sắc";
+            if (score >= 8.0) return "Giỏi";
+            if (score >= 6.5) return "Khá";
+            if (score >= 5.0) return "Trung bình";
+            return "Yếu";
+        }
+
+        function getScoreClass(score) {
+            if (score >= 8.0) return "excellent";
+            if (score >= 6.5) return "good";
+            return "average";
+        }
+
+        function getMedal(rank) {
+            if (rank === 1) return "🥇";
+            if (rank === 2) return "🥈";
+            if (rank === 3) return "🥉";
+            return "";
+        }
+
+        function getRankClass(rank) {
+            if (rank === 1) return "rank-1";
+            if (rank === 2) return "rank-2";
+            if (rank === 3) return "rank-3";
+            return "";
+        }
+
+        function getInitials(name) {
+            return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        function renderTable(data = currentData) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            data.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="rank ${getRankClass(student.rank)}">
+                        ${getMedal(student.rank)} ${student.rank}
+                    </td>
+                    <td>
+                        <div class="student-info">
+                            <div class="avatar">${getInitials(student.name)}</div>
+                            <div>
+                                <div class="student-name">${student.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="student-class">${student.class}</td>
+                    <td class="score ${getScoreClass(student.score)}">${student.score}</td>
+                    <td>${getClassification(student.score)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function sortByScore() {
+            currentData.sort((a, b) => b.score - a.score);
+            updateRanks();
+            renderTable();
+        }
+
+        function sortByName() {
+            currentData.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+            renderTable();
+        }
+
+        function filterExcellent() {
+            currentData = students.filter(student => student.score >= 8.0);
+            renderTable();
+        }
+
+        function showAll() {
+            currentData = [...students];
+            renderTable();
+        }
+
+        function searchStudent() {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredData = students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.class.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filteredData);
+        }
+
+        function updateRanks() {
+            currentData.forEach((student, index) => {
+                student.rank = index + 1;
+            });
+        }
+
+        // Initialize table
+        renderTable();
+    </script>
+</body>
+</html>
