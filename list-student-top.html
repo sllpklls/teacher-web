@@ -1,126 +1,251 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Học Sinh Có Thành Tích Cao</title>
-    <link rel="stylesheet" href="styles/style-list.css">
+<title>MS NGOC</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Course Project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
+<link href="plugins/fontawesome-free-5.0.1/css/fontawesome-all.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="styles/news_styles.css">
+<link rel="stylesheet" type="text/css" href="styles/news_responsive.css">
+<link rel="stylesheet" type="text/css" href="styles/style-list-student.css">
+
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 Danh Sách Học Sinh Có Thành Tích Cao</h1>
-            <p>Kỳ 2 Năm học 2024-2025</p>
-        </div>
 
-        <div class="ranking-table">
-            
+<div class="super_container">
 
-            <!-- <div class="controls">
-                <button class="btn btn-primary" onclick="sortByName()">Sắp xếp theo tên</button>
-                <button class="btn btn-secondary" onclick="sortByClass()">Sắp xếp theo lớp</button>
-                <button class="btn btn-secondary" onclick="sortById()">Sắp xếp theo STT</button>
-            </div> -->
+	<!-- Header -->
+	<header class="header d-flex flex-row">
+		<div class="header_content d-flex flex-row align-items-center">
+			<!-- Logo -->
+			<div class="logo_container">
+				<div class="logo">
+					<img src="images/logo.png" alt="">
+					<span>MS NGOC</span>
+				</div>
+			</div>
 
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="🔍 Tìm kiếm học sinh..." onkeyup="searchStudent()">
-            </div>
+			<!-- Main Navigation -->
+			<nav class="main_nav_container">
+				<div class="main_nav">
+					<ul class="main_nav_list">
+						<li class="main_nav_item"><a href="index.html">Trang chủ</a></li>
+						<li class="main_nav_item"><a href="#">Về chúng tôi</a></li>
+						<li class="main_nav_item"><a href="courses.html">Khoá học</a></li>
+						<li class="main_nav_item"><a href="#">Thông báo</a></li>
+						<li class="main_nav_item"><a href="contact.html">Liên hệ</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+		<div class="header_side d-flex flex-row justify-content-center align-items-center">
+			<img src="images/phone-call.svg" alt="">
+			<span>097 442 9186</span>
+		</div>
 
-            <div class="table-container">
-                <table id="studentTable">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Họ và tên</th>
-                            <th>Lớp</th>
-                            <th>Địa chỉ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Data will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+		<!-- Hamburger -->
+		<div class="hamburger_container">
+			<i class="fas fa-bars trans_200"></i>
+		</div>
+	</header>
+	
+	<!-- Menu -->
+	<div class="menu_container menu_mm">
+		<!-- Menu Close Button -->
+		<div class="menu_close_container">
+			<div class="menu_close"></div>
+		</div>
 
-    <script>
-        const students = [
-  { id: 1, name: "Lê Thị Quỳnh Anh", class: "Lớp 10", address: "Hà Nội" },
-  { id: 2, name: "Vũ Bảo Ngọc", class: "Lớp 4", address: "Ninh Bình" },
-  { id: 3, name: "Đặng Minh Quân", class: "Lớp 7", address: "Quảng Nam" },
-  { id: 4, name: "Mạc Bảo Hân", class: "Lớp 1", address: "Thái Bình" },
-  { id: 5, name: "Phạm Nguyễn Tú Cầm", class: "Lớp 1", address: "Bến Tre" },
-  { id: 6, name: "Nguyễn Phúc Lâm", class: "Lớp 5", address: "Hà Nội" },
-  { id: 7, name: "Nguyễn Thị Thu Trang", class: "Lớp 11", address: "Hà Nội" },
-  { id: 8, name: "Vũ Trúc Diễm", class: "Lớp 3", address: "Thái Bình" },
-  { id: 9, name: "Trần Gia Hân", class: "Lớp 5", address: "Vĩnh Phúc" },
-  { id: 10, name: "Nguyễn Bích Ngọc", class: "", address: "Vĩnh Phúc" },
-  { id: 11, name: "Hoàng Ngọc Thái", class: "Lớp 6", address: "Vĩnh Phúc" },
-  { id: 12, name: "Mai Việt Anh", class: "Lớp 4", address: "Bắc Giang" },
-  { id: 13, name: "Trương Hạ Diệp Anh", class: "Lớp 9", address: "Thanh Hoá" },
-  { id: 14, name: "Dương Minh Đức", class: "Lớp 7", address: "Hà Tĩnh" },
-  { id: 15, name: "Nguyễn Hồng Bích Ngọc", class: "Lớp 8", address: "Hà Tĩnh" },
-  { id: 16, name: "Hà Hải Phong", class: "Lớp 2", address: "Thanh Hoá" },
-  { id: 17, name: "Lâm Khánh Vy", class: "Lớp 5", address: "Hải Dương" },
-  { id: 18, name: "HEILY Tran", class: "Lớp 1", address: "Mỹ" },
-];
+		<!-- Menu Items -->
+		<div class="menu_inner menu_mm">
+			<div class="menu menu_mm">
+				<ul class="menu_list menu_mm">
+					<li class="menu_item menu_mm"><a href="index.html">Trang chủ</a></li>
+					<li class="menu_item menu_mm"><a href="#">Về chúng tôi</a></li>
+					<li class="menu_item menu_mm"><a href="courses.html">Khoá học</a></li>
+					<li class="menu_item menu_mm"><a href="#">Thông báo</a></li>
+					<li class="menu_item menu_mm"><a href="contact.html">Liên hệ</a></li>
+				</ul>
+
+				<!-- Menu Social -->
+				<div class="menu_social_container menu_mm">
+					<ul class="menu_social menu_mm">
+						<li class="menu_social_item menu_mm"><a href="#"><i class="fab fa-pinterest"></i></a></li>
+						<li class="menu_social_item menu_mm"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+						<li class="menu_social_item menu_mm"><a href="#"><i class="fab fa-instagram"></i></a></li>
+						<li class="menu_social_item menu_mm"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+						<li class="menu_social_item menu_mm"><a href="#"><i class="fab fa-twitter"></i></a></li>
+					</ul>
+				</div>
+
+				<div class="menu_copyright menu_mm">
+					Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Home -->
+	<div class="home">
+		<div class="home_background_container prlx_parent">
+			<div class="home_background prlx" style="background-image:url(images/news_background.jpg)"></div>
+		</div>
+		<div class="home_content">
+			<h1>Class's Ms Ngoc</h1>
+		</div>
+	</div>
+
+	<!-- Student List Section -->
+	<div class="student-section">
+		<div class="student-container">
+			<div class="section-header">
+				<h2>📚 Danh Sách Học Sinh Đạt Kết Quả Cao</h2>
+				<p>Kỳ II - Năm học 2024-2025</p>
+			</div>
+
+			<!-- <div class="stats">
+				<div class="stat-card">
+					<div class="stat-number">25</div>
+					<div class="stat-label">Tổng số học sinh</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-number">3</div>
+					<div class="stat-label">Số lớp</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-number">100%</div>
+					<div class="stat-label">Có địa chỉ</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-number">2024</div>
+					<div class="stat-label">Năm học</div>
+				</div>
+			</div> -->
+
+			<!-- <div class="controls">
+				<button class="btn btn-primary" onclick="sortByName()">Sắp xếp theo tên</button>
+				<button class="btn btn-secondary" onclick="sortByClass()">Sắp xếp theo lớp</button>
+				<button class="btn btn-secondary" onclick="sortById()">Sắp xếp theo STT</button>
+			</div> -->
+
+			<div class="search-box">
+				<input type="text" class="search-input" placeholder="🔍 Tìm kiếm học sinh..." onkeyup="searchStudent()">
+			</div>
+
+			<div class="table-container">
+				<table id="studentTable">
+					<thead>
+						<tr>
+							<th>STT</th>
+							<th>Họ và tên</th>
+							<th>Lớp</th>
+							<th>Địa chỉ</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+						<!-- Data will be populated by JavaScript -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<!-- Footer Column - Menu -->
+				<div class="col-lg-3 footer_col">
+					<div class="footer_column_title">Menu</div>
+					<div class="footer_column_content">
+						<ul>
+							<li class="footer_list_item"><a href="index.html">Trang chủ</a></li>
+							<li class="footer_list_item"><a href="#">Về chúng tôi</a></li>
+							<li class="footer_list_item"><a href="courses.html">Khoá học</a></li>
+							<li class="footer_list_item"><a href="#">Thông báo</a></li>
+							<li class="footer_list_item"><a href="contact.html">Liên hệ</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Footer Column - Usefull Links -->
+				<div class="col-lg-3 footer_col">
+					<div class="footer_column_title">Liên kết hữu ích</div>
+					<div class="footer_column_content">
+						<ul>
+							<li class="footer_list_item"><a href="#">Phản hồi</a></li>
+							<li class="footer_list_item"><a href="#">FAQ</a></li>
+							<li class="footer_list_item"><a href="#">Cộng đồng</a></li>
+							<li class="footer_list_item"><a href="#">Hình ảnh trường</a></li>
+							<li class="footer_list_item"><a href="#">Học phí</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Footer Column - Contact -->
+				<div class="col-lg-3 footer_col">
+					<div class="footer_column_title">Liên hệ</div>
+					<div class="footer_column_content">
+						<ul>
+							<li class="footer_contact_item">
+								<div class="footer_contact_icon">
+									<img src="images/placeholder.svg" alt="">
+								</div>
+								Hà Nội, Việt Nam
+							</li>
+							<li class="footer_contact_item">
+								<div class="footer_contact_icon">
+									<img src="images/smartphone.svg" alt="">
+								</div>
+								097 442 9186
+							</li>
+							<li class="footer_contact_item">
+								<div class="footer_contact_icon">
+									<img src="images/envelope.svg" alt="">
+								</div>
+								msngoc@company.com
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer Copyright -->
+			<div class="footer_bar d-flex flex-column flex-sm-row align-items-center">
+				<div class="footer_copyright">
+					<span>&copy; 2024 MS NGOC. All rights reserved</span>
+				</div>
+				<div class="footer_social ml-sm-auto">
+					<ul class="menu_social">
+						<li class="menu_social_item"><a href="#"><i class="fab fa-pinterest"></i></a></li>
+						<li class="menu_social_item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+						<li class="menu_social_item"><a href="#"><i class="fab fa-instagram"></i></a></li>
+						<li class="menu_social_item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+						<li class="menu_social_item"><a href="#"><i class="fab fa-twitter"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+</div>
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="styles/bootstrap4/popper.js"></script>
+<script src="styles/bootstrap4/bootstrap.min.js"></script>
+<script src="plugins/greensock/TweenMax.min.js"></script>
+<script src="plugins/greensock/TimelineMax.min.js"></script>
+<script src="plugins/scrollmagic/ScrollMagic.min.js"></script>
+<script src="plugins/greensock/animation.gsap.min.js"></script>
+<script src="plugins/greensock/ScrollToPlugin.min.js"></script>
+<script src="plugins/scrollTo/jquery.scrollTo.min.js"></script>
+<script src="plugins/easing/easing.js"></script>
+<script src="js/news_custom.js"></script>
+<script src="js/list_student.js"></script>
 
 
-        let currentData = [...students];
-
-        function renderTable(data = currentData) {
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
-
-            data.forEach((student, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="stt">${student.id}</td>
-                    <td>
-                        <div class="student-info">
-                            <div class="avatar">${getInitials(student.name)}</div>
-                            <div class="student-name">${student.name}</div>
-                        </div>
-                    </td>
-                    <td class="student-class">${student.class}</td>
-                    <td class="address">${student.address}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        function getInitials(name) {
-            return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
-        }
-
-        function sortByName() {
-            currentData.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
-            renderTable();
-        }
-
-        function sortByClass() {
-            currentData.sort((a, b) => a.class.localeCompare(b.class));
-            renderTable();
-        }
-
-        function sortById() {
-            currentData.sort((a, b) => a.id - b.id);
-            renderTable();
-        }
-
-        function searchStudent() {
-            const searchTerm = event.target.value.toLowerCase();
-            const filteredData = students.filter(student => 
-                student.name.toLowerCase().includes(searchTerm) ||
-                student.class.toLowerCase().includes(searchTerm) ||
-                student.address.toLowerCase().includes(searchTerm)
-            );
-            renderTable(filteredData);
-        }
-
-        // Initialize table
-        renderTable();
-    </script>
 </body>
 </html>
