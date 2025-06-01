@@ -19,60 +19,108 @@ const students = [
     { id: 18, name: "HEILY Tran", class: "Lớp 1", address: "Mỹ" },
     ];
 
-let currentData = [...students];
-
-function renderTable(data = currentData) {
-const tableBody = document.getElementById('tableBody');
-tableBody.innerHTML = '';
-
-data.forEach((student, index) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td class="stt">${student.id}</td>
-        <td>
-            <div class="student-info">
-                <div class="avatar">${getInitials(student.name)}</div>
-                <div class="student-name">${student.name}</div>
-            </div>
-        </td>
-        <td><span class="student-class">${student.class}</span></td>
-        <td class="address">${student.address}</td>
-    `;
-    tableBody.appendChild(row);
-});
-}
-
-function getInitials(name) {
-return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
-}
-
-function sortByName() {
-currentData.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
-renderTable();
-}
-
-function sortByClass() {
-currentData.sort((a, b) => a.class.localeCompare(b.class));
-renderTable();
-}
-
-function sortById() {
-currentData.sort((a, b) => a.id - b.id);
-renderTable();
-}
-
-function searchStudent() {
-const searchTerm = event.target.value.toLowerCase();
-const filteredData = students.filter(student => 
-    student.name.toLowerCase().includes(searchTerm) ||
-    student.class.toLowerCase().includes(searchTerm) ||
-    student.address.toLowerCase().includes(searchTerm)
-);
-currentData = filteredData;
-renderTable(filteredData);
-}
-
-// Initialize table when page loads
-document.addEventListener('DOMContentLoaded', function() {
-renderTable();
-});
+    let currentData = [...students];
+    let map;
+    let marker;
+    
+    // Initialize map when page loads
+    function initMap() {
+        // Default coordinates for Hanoi, Vietnam
+        const defaultLat = 21.0285;
+        const defaultLng = 105.8542;
+        
+        // Create map
+        map = L.map('map').setView([defaultLat, defaultLng], 13);
+        
+        // Add tile layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Add marker
+        marker = L.marker([defaultLat, defaultLng])
+            .addTo(map)
+            .bindPopup('<b>MS NGOC</b><br>Trường học tại Hà Nội')
+            .openPopup();
+    }
+    
+    function updateMapLocation() {
+        const lat = parseFloat(document.getElementById('latitude').value);
+        const lng = parseFloat(document.getElementById('longitude').value);
+        
+        if (isNaN(lat) || isNaN(lng)) {
+            alert('Vui lòng nhập tọa độ hợp lệ!');
+            return;
+        }
+        
+        // Update map view
+        map.setView([lat, lng], 13);
+        
+        // Remove old marker
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        
+        // Add new marker
+        marker = L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(`<b>Vị trí mới</b><br>Lat: ${lat}<br>Lng: ${lng}`)
+            .openPopup();
+    }
+    
+    function renderTable(data = currentData) {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+    
+        data.forEach((student, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="stt">${student.id}</td>
+                <td>
+                    <div class="student-info">
+                        <div class="avatar">${getInitials(student.name)}</div>
+                        <div class="student-name">${student.name}</div>
+                    </div>
+                </td>
+                <td><span class="student-class">${student.class}</span></td>
+                <td class="address">${student.address}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+    
+    function getInitials(name) {
+        return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
+    }
+    
+    function sortByName() {
+        currentData.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+        renderTable();
+    }
+    
+    function sortByClass() {
+        currentData.sort((a, b) => a.class.localeCompare(b.class));
+        renderTable();
+    }
+    
+    function sortById() {
+        currentData.sort((a, b) => a.id - b.id);
+        renderTable();
+    }
+    
+    function searchStudent() {
+        const searchTerm = event.target.value.toLowerCase();
+        const filteredData = students.filter(student => 
+            student.name.toLowerCase().includes(searchTerm) ||
+            student.class.toLowerCase().includes(searchTerm) ||
+            student.address.toLowerCase().includes(searchTerm)
+        );
+        currentData = filteredData;
+        renderTable(filteredData);
+    }
+    
+    // Initialize table and map when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        renderTable();
+        initMap();
+    });
